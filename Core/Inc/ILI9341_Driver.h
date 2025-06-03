@@ -10,6 +10,8 @@
 
 
 
+
+
 #endif /* ILI9341_D_H_ */
 
 #include "stm32f4xx_hal.h"
@@ -67,3 +69,5 @@ void ILI9341_Draw_Line(unsigned int color, unsigned int x1, unsigned int y1, uns
 void ILI9341_Draw_Filled_Rectangle(unsigned int color,unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2);
 void ILI9341_Draw_Empty_Rectangle(unsigned int color,unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2);
 void ILI9341_Draw_String(unsigned int x, unsigned int y, unsigned int color, unsigned int phone, char *str, unsigned char size);
+
+void ILI9341_Draw_Start_Screen(void);

@@ -1,6 +1,7 @@
 #include <ILI9341_Driver.h>
 #include "characters.h"
 #include "spi.h"
+#include "start_screen_rgb565.h"
 
 #define LCD_ROTATION 1
 
@@ -640,3 +641,24 @@ static void Before_Sending_Command() {
 	HAL_GPIO_WritePin(LCD_CS_GPIO_Port, LCD_CS_Pin, GPIO_PIN_RESET);
 }
 
+
+
+void ILI9341_Draw_Start_Screen(void)
+{
+    ILI9341_Set_Address(0, 0, 319, 239);
+
+    HAL_GPIO_WritePin(LCD_DC_GPIO_Port, LCD_DC_Pin, GPIO_PIN_RESET); // Komenda
+    HAL_GPIO_WritePin(LCD_CS_GPIO_Port, LCD_CS_Pin, GPIO_PIN_RESET);
+    ILI9341_SPI_Send(0x2C);
+
+    HAL_GPIO_WritePin(LCD_DC_GPIO_Port, LCD_DC_Pin, GPIO_PIN_SET);   // Dane
+
+    for (uint32_t i = 0; i < 320 * 240; i++)
+    {
+        uint16_t color = start_screen[i];
+        ILI9341_SPI_Send(color >> 8);
+        ILI9341_SPI_Send(color & 0xFF);
+    }
+
+    HAL_GPIO_WritePin(LCD_CS_GPIO_Port, LCD_CS_Pin, GPIO_PIN_SET);
+}

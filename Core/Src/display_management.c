@@ -24,6 +24,7 @@ void Display_clear_screen()
 
 void Display_booting_screen()
 {
+	/*
 	ILI9341_Fill_Screen(BLACK);
 	ILI9341_Draw_String(95, 40, WHITE, BLACK, "MASTER'S THESIS", 2);
 	ILI9341_Draw_String(70, 60, WHITE, BLACK, "DAB+ DEVELOPMENT BOARD", 2);
@@ -33,6 +34,8 @@ void Display_booting_screen()
 	ILI9341_Draw_String(50, 140, WHITE, BLACK, "JACEK KOLODZIEJ, Beng, PhD", 2);
 	ILI9341_Draw_String(90, 160, WHITE, BLACK, "AGH KRAKOW, 2022", 2);
 	ILI9341_Draw_String(120, 180, WHITE, BLACK, "Booting...", 2);
+	*/
+	ILI9341_Draw_Start_Screen();
 }
 
 void Display_main_screen_background()

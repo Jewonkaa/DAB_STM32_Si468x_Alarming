@@ -31,7 +31,8 @@ Core/Src/ILI9341_Driver.o: ../Core/Src/ILI9341_Driver.c \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- ../Core/Inc/main.h ../Core/Inc/characters.h ../Core/Inc/spi.h
+ ../Core/Inc/main.h ../Core/Inc/characters.h ../Core/Inc/spi.h \
+ ../Core/Inc/start_screen_rgb565.h
 ../Core/Inc/ILI9341_Driver.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:
@@ -67,3 +68,4 @@ Core/Src/ILI9341_Driver.o: ../Core/Src/ILI9341_Driver.c \
 ../Core/Inc/main.h:
 ../Core/Inc/characters.h:
 ../Core/Inc/spi.h:
+../Core/Inc/start_screen_rgb565.h:

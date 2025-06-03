@@ -112,6 +112,7 @@ int main(void)
 
   ILI9341_Init();
   Display_booting_screen();
+  //HAL_Delay(10000);
 
   //check_eeprom_erased();
   //HAL_Delay(5000);
