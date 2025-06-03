@@ -1,5 +1,4 @@
-Core/Src/state_machine.o: ../Core/Src/state_machine.c \
- ../Core/Inc/state_machine.h \
+Core/Src/alarming.o: ../Core/Src/alarming.c ../Core/Inc/alarming.h \
  ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
  ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
  ../Drivers/CMSIS/Include/core_cm4.h \
@@ -31,11 +30,8 @@ Core/Src/state_machine.o: ../Core/Src/state_machine.c \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- ../Core/Inc/debug_uart.h ../Core/Inc/display_management.h \
- ../Core/Inc/main.h ../Core/Inc/Si468x.h ../Core/Inc/ILI9341_Driver.h \
- ../Core/Inc/Si468x.h ../Core/Inc/eeprom.h ../Core/Inc/eeprom_addresses.h \
- ../Core/Inc/touch.h ../Core/Inc/alarming.h
-../Core/Inc/state_machine.h:
+ ../Core/Inc/leds.h
+../Core/Inc/alarming.h:
 ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h:
 ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h:
 ../Drivers/CMSIS/Include/core_cm4.h:
@@ -67,13 +63,4 @@ Core/Src/state_machine.o: ../Core/Src/state_machine.c \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
-../Core/Inc/debug_uart.h:
-../Core/Inc/display_management.h:
-../Core/Inc/main.h:
-../Core/Inc/Si468x.h:
-../Core/Inc/ILI9341_Driver.h:
-../Core/Inc/Si468x.h:
-../Core/Inc/eeprom.h:
-../Core/Inc/eeprom_addresses.h:
-../Core/Inc/touch.h:
-../Core/Inc/alarming.h:
+../Core/Inc/leds.h:

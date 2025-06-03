@@ -11,7 +11,7 @@
 #include "Si468x.h"
 #include "eeprom.h"
 #include "touch.h"
-#include "leds.h"
+#include "alarming.h"
 
 uint8_t system_state = main_screen;
 uint8_t playing_state = playing;
@@ -404,37 +404,25 @@ void state_machine()
 		//Alarming by DLS button handling
 		if(touch_coordinates.x > 5 && touch_coordinates.x < 157 && touch_coordinates.y > 43 && touch_coordinates.y < 114)
 		{
-			LEDs_Red_On();
-			LEDs_Green_Off();
-			LEDs_Blue_Off();
-			LEDs_Orange_Off();
+			Alarming_Mode_1_On();
 		}
 
 		//Alarming by ...1 button handling
 		if(touch_coordinates.x > 163 && touch_coordinates.x < 315 && touch_coordinates.y > 43 && touch_coordinates.y < 114)
 		{
-			LEDs_Red_Off();
-			LEDs_Green_Off();
-			LEDs_Blue_On();
-			LEDs_Orange_Off();
+			Alarming_Mode_2_On();
 		}
 
 		//Alarming by ...2 button handling
 		if(touch_coordinates.x > 5 && touch_coordinates.x < 157 && touch_coordinates.y > 119 && touch_coordinates.y < 190)
 		{
-			LEDs_Red_Off();
-			LEDs_Green_Off();
-			LEDs_Blue_Off();
-			LEDs_Orange_On();
+			Alarming_Mode_3_On();
 		}
 
 		//No alarming - normal mode button handling
 		if(touch_coordinates.x > 163 && touch_coordinates.x < 315 && touch_coordinates.y > 119 && touch_coordinates.y < 190)
 		{
-			LEDs_Red_Off();
-			LEDs_Green_On();
-			LEDs_Blue_Off();
-			LEDs_Orange_Off();
+			Alarming_Off();
 		}
 
 		//left button handling (settings)
