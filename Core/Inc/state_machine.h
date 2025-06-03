@@ -15,7 +15,8 @@ main_screen,
 services_list_screen,
 scanning,
 signal_info,
-settings
+settings,
+alarming
 };
 
 enum play_state{

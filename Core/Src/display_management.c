@@ -73,7 +73,7 @@ void Display_main_screen_background()
 	//buttons to other menus
 	ILI9341_Draw_Filled_Rectangle(ORANGE, 5, 195, 157, 235);
 	ILI9341_Draw_Filled_Rectangle(ORANGE, 163, 195, 315, 235);
-	ILI9341_Draw_String(50, 207, WHITE, ORANGE, "SETTINGS", 2);
+	ILI9341_Draw_String(53, 207, WHITE, ORANGE, "ALARMING", 2);
 	ILI9341_Draw_String(192, 207, WHITE, ORANGE, "SERVICE LIST", 2);
 }
 
@@ -529,7 +529,7 @@ void Display_settings_screen_background()
 	ILI9341_Draw_Filled_Rectangle(ORANGE, 5, 195, 157, 235);
 	ILI9341_Draw_Filled_Rectangle(ORANGE, 163, 195, 315, 235);
 	ILI9341_Draw_String(37, 207, WHITE, ORANGE, "SIGNAL INFO", 2);
-	ILI9341_Draw_String(195, 207, WHITE, ORANGE, "MAIN SCREEN", 2);
+	ILI9341_Draw_String(203, 207, WHITE, ORANGE, "ALARMING", 2);
 }
 
 void Display_settings_screen_data(dab_management_t _dab_management)
@@ -541,6 +541,42 @@ void Display_settings_screen_data(dab_management_t _dab_management)
 	//backlight bar
 	ILI9341_Draw_Filled_Rectangle(GREEN, 168, 40, 308, 50);
 }
+
+void Display_alarming_screen_background()
+{
+	//clear display
+	Display_clear_screen();
+
+	//Display Title
+	ILI9341_Draw_String(5, 1, WHITE, BLACK, "ALARMING SETTINGS", 2);
+
+	//alarming mode description bar background
+	ILI9341_Draw_Filled_Rectangle(DARKGREY, 5, 20, 315, 38);
+	ILI9341_Draw_String(48, 22, WHITE, DARKGREY, "TAP TO CHOOSE ALARMING OPTION", 2);
+
+	//Alarming by DLS Label button
+	ILI9341_Draw_Filled_Rectangle(ORANGE, 5, 43, 157, 114);
+	ILI9341_Draw_String(54, 72, WHITE, ORANGE, "ALARM DLS", 2);
+	//Alarming by ...1 button
+	ILI9341_Draw_Filled_Rectangle(ORANGE, 163, 43, 315, 114);
+	ILI9341_Draw_String(211, 72, WHITE, ORANGE, "ALARM 1", 2);
+
+	//Alarming by ...2 button
+	ILI9341_Draw_Filled_Rectangle(ORANGE, 5, 119, 157, 190);
+	ILI9341_Draw_String(35, 127, WHITE, ORANGE, "ALARM 2", 2);
+
+	//No alarming - normal mode button
+	ILI9341_Draw_Filled_Rectangle(ORANGE, 163, 119, 315, 190);
+	ILI9341_Draw_String(193, 127, WHITE, ORANGE, "NO ALARM", 2);
+
+	//buttons to other menus
+	ILI9341_Draw_Filled_Rectangle(ORANGE, 5, 195, 157, 235);
+	ILI9341_Draw_Filled_Rectangle(ORANGE, 163, 195, 315, 235);
+	ILI9341_Draw_String(47, 207, WHITE, ORANGE, "SETTINGS", 2);
+	ILI9341_Draw_String(195, 207, WHITE, ORANGE, "MAIN SCREEN", 2);
+}
+
+
 
 void Display_time(time_t time_val)
 {

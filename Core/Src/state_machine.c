@@ -98,11 +98,11 @@ void state_machine()
 			}
 		}
 
-		//left button handling (settings)
+		//left button handling (alarming)
 		if(touch_coordinates.x >  5 && touch_coordinates.x < 157 && touch_coordinates.y > 195 && touch_coordinates.y < 235)
 		{
 			state_change_done = 0;
-			system_state = settings;
+			system_state = alarming;
 		}
 
 		//right button handling (service list)
@@ -378,6 +378,80 @@ void state_machine()
 		{
 			state_change_done = 0;
 			system_state = signal_info;
+		}
+
+		//right button handling (alarming)
+		if(touch_coordinates.x >  163 && touch_coordinates.x < 315 && touch_coordinates.y > 195 && touch_coordinates.y < 235)
+		{
+			state_change_done = 0;
+			system_state = alarming;
+		}
+
+
+		break;
+
+	case alarming:
+		if(!state_change_done)
+		{
+			Display_alarming_screen_background();
+			//scan_cancel_flag = 0;
+			state_change_done = 1;
+		}
+
+		//Display_settings_screen_data(dab_management_to_display);
+
+		//vol+ button handling
+		if(touch_coordinates.x > 163 && touch_coordinates.x < 315 && touch_coordinates.y > 60 && touch_coordinates.y < 100)
+		{
+			dab_management_to_display.audio_volume += 2;
+			if(dab_management_to_display.audio_volume > 63)
+			{
+				dab_management_to_display.audio_volume = 63;
+			}
+			Si468x_set_audio_volume(dab_management_to_display.audio_volume);
+		}
+
+		//vol- button handling
+		if(touch_coordinates.x > 5 && touch_coordinates.x < 157 && touch_coordinates.y > 60 && touch_coordinates.y < 100)
+		{
+			dab_management_to_display.audio_volume -= 2;
+			if((dab_management_to_display.audio_volume < 0) || (dab_management_to_display.audio_volume > 63))
+			{
+				dab_management_to_display.audio_volume = 0;
+			}
+			Si468x_set_audio_volume(dab_management_to_display.audio_volume);
+		}
+
+		//backlight+ button handling
+		if(touch_coordinates.x > 163 && touch_coordinates.x < 315 && touch_coordinates.y > 105 && touch_coordinates.y < 145)
+		{
+
+		}
+
+		//backlight- button handling
+		if(touch_coordinates.x > 5 && touch_coordinates.x < 157 && touch_coordinates.y > 105 && touch_coordinates.y < 145)
+		{
+
+		}
+
+		//scanning button handling
+		if(touch_coordinates.x > 5 && touch_coordinates.x < 157 && touch_coordinates.y > 150 && touch_coordinates.y < 190)
+		{
+			state_change_done = 0;
+			system_state = scanning;
+		}
+
+		//touch calibration button handling
+		if(touch_coordinates.x > 163 && touch_coordinates.x < 315 && touch_coordinates.y > 150 && touch_coordinates.y < 190)
+		{
+
+		}
+
+		//left button handling (settings)
+		if(touch_coordinates.x >  5 && touch_coordinates.x < 157 && touch_coordinates.y > 195 && touch_coordinates.y < 235)
+		{
+			state_change_done = 0;
+			system_state = settings;
 		}
 
 		//right button handling (main screen)

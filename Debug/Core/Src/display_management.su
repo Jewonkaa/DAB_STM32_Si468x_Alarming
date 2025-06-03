@@ -13,4 +13,5 @@
 ../Core/Src/display_management.c:382:6:Display_dab_digrad_status_data	32	static
 ../Core/Src/display_management.c:497:6:Display_settings_screen_background	16	static
 ../Core/Src/display_management.c:535:6:Display_settings_screen_data	40	static
-../Core/Src/display_management.c:545:6:Display_time	24	static
+../Core/Src/display_management.c:545:6:Display_alarming_screen_background	16	static
+../Core/Src/display_management.c:581:6:Display_time	24	static

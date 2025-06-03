@@ -35,6 +35,8 @@ void Display_dab_digrad_status_data(dab_digrad_status_t digrad_status);
 void Display_settings_screen_background();
 void Display_settings_screen_data(dab_management_t _dab_management);
 
+void Display_alarming_screen_background();
+
 void Display_time(time_t time_val);
 
 #endif /* INC_DISPLAY_H_ */
