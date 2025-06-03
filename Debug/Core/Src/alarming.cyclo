@@ -1,5 +1,6 @@
-../Core/Src/alarming.c:12:6:Alarming_Mode_1_On	1
-../Core/Src/alarming.c:22:6:Alarming_Mode_2_On	1
-../Core/Src/alarming.c:32:6:Alarming_Mode_3_On	1
-../Core/Src/alarming.c:42:6:Alarming_Off	1
-../Core/Src/alarming.c:52:19:Alarming_Get_Status	1
+../Core/Src/alarming.c:12:6:Alarming_Init	1
+../Core/Src/alarming.c:17:6:Alarming_Mode_1_On	1
+../Core/Src/alarming.c:27:6:Alarming_Mode_2_On	1
+../Core/Src/alarming.c:37:6:Alarming_Mode_3_On	1
+../Core/Src/alarming.c:47:6:Alarming_Off	1
+../Core/Src/alarming.c:57:19:Alarming_Get_Status	1

@@ -35,7 +35,8 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Core/Inc/Si468x.h ../Core/Inc/debug_uart.h ../Core/Inc/touch.h \
  ../Core/Inc/state_machine.h ../Core/Inc/eeprom.h \
  ../Core/Inc/eeprom_addresses.h ../Core/Inc/Si468x.h \
- ../Core/Inc/ILI9341_Driver.h ../Core/Inc/dab_defs.h
+ ../Core/Inc/display_management.h ../Core/Inc/ILI9341_Driver.h \
+ ../Core/Inc/dab_defs.h ../Core/Inc/alarming.h
 ../Core/Inc/main.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:
@@ -82,5 +83,7 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Core/Inc/eeprom.h:
 ../Core/Inc/eeprom_addresses.h:
 ../Core/Inc/Si468x.h:
+../Core/Inc/display_management.h:
 ../Core/Inc/ILI9341_Driver.h:
 ../Core/Inc/dab_defs.h:
+../Core/Inc/alarming.h:

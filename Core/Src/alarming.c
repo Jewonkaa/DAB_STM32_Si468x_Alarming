@@ -9,6 +9,11 @@
 
 static alarming_status_t alarming_status;
 
+void Alarming_Init()
+{
+	Alarming_Off();
+}
+
 void Alarming_Mode_1_On()
 {
 	alarming_status = alarming_mode_1;

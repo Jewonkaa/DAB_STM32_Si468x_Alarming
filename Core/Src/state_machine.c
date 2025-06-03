@@ -36,6 +36,8 @@ uint8_t scan_complete_flag = 0;
 
 uint16_t audio_info_timeout;
 
+alarming_status_t alarming_status_sm; //alarming status to be used by state machine
+
 void state_machine()
 {
 	if(state_change_done)
@@ -51,7 +53,33 @@ void state_machine()
 	dab_management_to_display = get_dab_management();
 	dls_label_to_display = get_dls_label();
 	Si468x_dab_get_time();
+	alarming_status_sm = Alarming_Get_Status();
 
+	//manage alarming functionality
+	switch(alarming_status_sm)
+	{
+	case alarming_mode_1:
+		if(!strcmp(dls_label_to_display, "ALARM!"))
+		{
+			ILI9341_Draw_String(110, 110, WHITE, ORANGE, "ALARM!!!", 2);
+			LEDs_Green_On();
+			LEDs_Blue_On();
+			HAL_Delay(5000);
+		}
+		break;
+
+	case alarming_mode_2:
+		break;
+
+	case alarming_mode_3:
+		break;
+
+	case alarming_off:
+		break;
+
+	default:
+		break;
+	}
 
 	switch(system_state)
 	{
@@ -91,7 +119,17 @@ void state_machine()
 			if(playing_state == playing)
 			{
 				Si468x_dab_get_digital_service_data();
-				Display_main_screen_dls(dls_label_to_display);
+				if (alarming_status_sm == alarming_mode_1)
+				{
+					if(strcmp(dls_label_to_display, "ALARM!"))
+					{
+						Display_main_screen_dls(dls_label_to_display);
+					}
+				}
+				else
+				{
+					Display_main_screen_dls(dls_label_to_display);
+				}
 			}
 			else
 			{

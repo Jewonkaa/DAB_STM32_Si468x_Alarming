@@ -32,8 +32,9 @@
 #include "touch.h"
 #include "state_machine.h"
 #include "eeprom.h"
-#include "ILI9341_Driver.h"
+#include "display_management.h"
 #include "dab_defs.h"
+#include "alarming.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -112,6 +113,7 @@ int main(void)
 
   ILI9341_Init();
   Display_booting_screen();
+
   //HAL_Delay(10000);
 
   //check_eeprom_erased();
@@ -125,6 +127,7 @@ int main(void)
 
   Si468x_dab_init();
   restore_from_eeprom();
+  Alarming_Init();
 
 
   /* USER CODE END 2 */

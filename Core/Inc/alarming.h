@@ -13,12 +13,13 @@
 typedef uint8_t alarming_status_t;
 
 enum alarming_state{
+alarming_off,
 alarming_mode_1,
 alarming_mode_2,
-alarming_mode_3,
-alarming_off
+alarming_mode_3
 };
 
+void Alarming_Init();
 
 void Alarming_Mode_1_On();
 void Alarming_Mode_2_On();
