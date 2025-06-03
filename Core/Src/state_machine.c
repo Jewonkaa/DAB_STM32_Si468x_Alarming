@@ -11,6 +11,7 @@
 #include "Si468x.h"
 #include "eeprom.h"
 #include "touch.h"
+#include "leds.h"
 
 uint8_t system_state = main_screen;
 uint8_t playing_state = playing;
@@ -400,51 +401,40 @@ void state_machine()
 
 		//Display_settings_screen_data(dab_management_to_display);
 
-		//vol+ button handling
-		if(touch_coordinates.x > 163 && touch_coordinates.x < 315 && touch_coordinates.y > 60 && touch_coordinates.y < 100)
+		//Alarming by DLS button handling
+		if(touch_coordinates.x > 5 && touch_coordinates.x < 157 && touch_coordinates.y > 43 && touch_coordinates.y < 114)
 		{
-			dab_management_to_display.audio_volume += 2;
-			if(dab_management_to_display.audio_volume > 63)
-			{
-				dab_management_to_display.audio_volume = 63;
-			}
-			Si468x_set_audio_volume(dab_management_to_display.audio_volume);
+			LEDs_Red_On();
+			LEDs_Green_Off();
+			LEDs_Blue_Off();
+			LEDs_Orange_Off();
 		}
 
-		//vol- button handling
-		if(touch_coordinates.x > 5 && touch_coordinates.x < 157 && touch_coordinates.y > 60 && touch_coordinates.y < 100)
+		//Alarming by ...1 button handling
+		if(touch_coordinates.x > 163 && touch_coordinates.x < 315 && touch_coordinates.y > 43 && touch_coordinates.y < 114)
 		{
-			dab_management_to_display.audio_volume -= 2;
-			if((dab_management_to_display.audio_volume < 0) || (dab_management_to_display.audio_volume > 63))
-			{
-				dab_management_to_display.audio_volume = 0;
-			}
-			Si468x_set_audio_volume(dab_management_to_display.audio_volume);
+			LEDs_Red_Off();
+			LEDs_Green_Off();
+			LEDs_Blue_On();
+			LEDs_Orange_Off();
 		}
 
-		//backlight+ button handling
-		if(touch_coordinates.x > 163 && touch_coordinates.x < 315 && touch_coordinates.y > 105 && touch_coordinates.y < 145)
+		//Alarming by ...2 button handling
+		if(touch_coordinates.x > 5 && touch_coordinates.x < 157 && touch_coordinates.y > 119 && touch_coordinates.y < 190)
 		{
-
+			LEDs_Red_Off();
+			LEDs_Green_Off();
+			LEDs_Blue_Off();
+			LEDs_Orange_On();
 		}
 
-		//backlight- button handling
-		if(touch_coordinates.x > 5 && touch_coordinates.x < 157 && touch_coordinates.y > 105 && touch_coordinates.y < 145)
+		//No alarming - normal mode button handling
+		if(touch_coordinates.x > 163 && touch_coordinates.x < 315 && touch_coordinates.y > 119 && touch_coordinates.y < 190)
 		{
-
-		}
-
-		//scanning button handling
-		if(touch_coordinates.x > 5 && touch_coordinates.x < 157 && touch_coordinates.y > 150 && touch_coordinates.y < 190)
-		{
-			state_change_done = 0;
-			system_state = scanning;
-		}
-
-		//touch calibration button handling
-		if(touch_coordinates.x > 163 && touch_coordinates.x < 315 && touch_coordinates.y > 150 && touch_coordinates.y < 190)
-		{
-
+			LEDs_Red_Off();
+			LEDs_Green_On();
+			LEDs_Blue_Off();
+			LEDs_Orange_Off();
 		}
 
 		//left button handling (settings)

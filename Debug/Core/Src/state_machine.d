@@ -34,7 +34,7 @@ Core/Src/state_machine.o: ../Core/Src/state_machine.c \
  ../Core/Inc/debug_uart.h ../Core/Inc/display_management.h \
  ../Core/Inc/main.h ../Core/Inc/Si468x.h ../Core/Inc/ILI9341_Driver.h \
  ../Core/Inc/Si468x.h ../Core/Inc/eeprom.h ../Core/Inc/eeprom_addresses.h \
- ../Core/Inc/touch.h
+ ../Core/Inc/touch.h ../Core/Inc/leds.h
 ../Core/Inc/state_machine.h:
 ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h:
 ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h:
@@ -76,3 +76,4 @@ Core/Src/state_machine.o: ../Core/Src/state_machine.c \
 ../Core/Inc/eeprom.h:
 ../Core/Inc/eeprom_addresses.h:
 ../Core/Inc/touch.h:
+../Core/Inc/leds.h:

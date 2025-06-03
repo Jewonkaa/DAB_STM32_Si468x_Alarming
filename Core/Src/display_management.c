@@ -555,19 +555,19 @@ void Display_alarming_screen_background()
 	ILI9341_Draw_String(48, 22, WHITE, DARKGREY, "TAP TO CHOOSE ALARMING OPTION", 2);
 
 	//Alarming by DLS Label button
-	ILI9341_Draw_Filled_Rectangle(ORANGE, 5, 43, 157, 114);
-	ILI9341_Draw_String(54, 72, WHITE, ORANGE, "ALARM DLS", 2);
+	ILI9341_Draw_Filled_Rectangle(RED, 5, 43, 157, 114);
+	ILI9341_Draw_String(54, 72, WHITE, RED, "ALARM DLS", 2);
 	//Alarming by ...1 button
-	ILI9341_Draw_Filled_Rectangle(ORANGE, 163, 43, 315, 114);
-	ILI9341_Draw_String(211, 72, WHITE, ORANGE, "ALARM 1", 2);
+	ILI9341_Draw_Filled_Rectangle(BLUE, 163, 43, 315, 114);
+	ILI9341_Draw_String(211, 72, WHITE, BLUE, "ALARM 1", 2);
 
 	//Alarming by ...2 button
 	ILI9341_Draw_Filled_Rectangle(ORANGE, 5, 119, 157, 190);
 	ILI9341_Draw_String(35, 127, WHITE, ORANGE, "ALARM 2", 2);
 
 	//No alarming - normal mode button
-	ILI9341_Draw_Filled_Rectangle(ORANGE, 163, 119, 315, 190);
-	ILI9341_Draw_String(193, 127, WHITE, ORANGE, "NO ALARM", 2);
+	ILI9341_Draw_Filled_Rectangle(GREEN, 163, 119, 315, 190);
+	ILI9341_Draw_String(193, 127, WHITE, GREEN, "NO ALARM", 2);
 
 	//buttons to other menus
 	ILI9341_Draw_Filled_Rectangle(ORANGE, 5, 195, 157, 235);

@@ -1,1 +1,13 @@
-../Core/Src/leds.c:14:6:Leds_Control_Blink	8	static
+../Core/Src/leds.c:14:6:LEDs_Red_On	8	static
+../Core/Src/leds.c:19:6:LEDs_Red_Off	8	static
+../Core/Src/leds.c:24:6:LEDs_Red_Toggle	8	static
+../Core/Src/leds.c:29:6:LEDs_Green_On	8	static
+../Core/Src/leds.c:34:6:LEDs_Green_Off	8	static
+../Core/Src/leds.c:39:6:LEDs_Green_Toggle	8	static
+../Core/Src/leds.c:44:6:LEDs_Blue_On	8	static
+../Core/Src/leds.c:49:6:LEDs_Blue_Off	8	static
+../Core/Src/leds.c:54:6:LEDs_Blue_Toggle	8	static
+../Core/Src/leds.c:58:6:LEDs_Orange_On	8	static
+../Core/Src/leds.c:63:6:LEDs_Orange_Off	8	static
+../Core/Src/leds.c:68:6:LEDs_Orange_Toggle	8	static
+../Core/Src/leds.c:73:6:Leds_Control_Blink	8	static
