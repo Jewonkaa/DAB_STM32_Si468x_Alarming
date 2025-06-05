@@ -10,6 +10,9 @@
 
 #include "stm32f4xx.h"
 
+#define ALARM_START_PAD "ALARM_START"
+#define ALARM_STOP_PAD "ALARM_STOP"
+
 typedef uint8_t alarming_status_t;
 
 enum alarming_state{
@@ -25,6 +28,10 @@ void Alarming_Mode_1_On();
 void Alarming_Mode_2_On();
 void Alarming_Mode_3_On();
 void Alarming_Off();
+
+void Alarming_Mode_1_Handle();
+void Alarming_Mode_2_Handle();
+void Alarming_Mode_3_Handle();
 
 alarming_status_t Alarming_Get_Status();
 

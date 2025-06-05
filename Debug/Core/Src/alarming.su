@@ -1,6 +1,9 @@
-../Core/Src/alarming.c:12:6:Alarming_Init	8	static
-../Core/Src/alarming.c:17:6:Alarming_Mode_1_On	8	static
-../Core/Src/alarming.c:27:6:Alarming_Mode_2_On	8	static
-../Core/Src/alarming.c:37:6:Alarming_Mode_3_On	8	static
-../Core/Src/alarming.c:47:6:Alarming_Off	8	static
-../Core/Src/alarming.c:57:19:Alarming_Get_Status	4	static
+../Core/Src/alarming.c:19:6:Alarming_Init	8	static
+../Core/Src/alarming.c:24:6:Alarming_Mode_1_On	8	static
+../Core/Src/alarming.c:34:6:Alarming_Mode_2_On	8	static
+../Core/Src/alarming.c:44:6:Alarming_Mode_3_On	8	static
+../Core/Src/alarming.c:54:6:Alarming_Off	8	static
+../Core/Src/alarming.c:64:6:Alarming_Mode_1_Handle	40	static
+../Core/Src/alarming.c:109:6:Alarming_Mode_2_Handle	4	static
+../Core/Src/alarming.c:114:6:Alarming_Mode_3_Handle	4	static
+../Core/Src/alarming.c:119:19:Alarming_Get_Status	4	static

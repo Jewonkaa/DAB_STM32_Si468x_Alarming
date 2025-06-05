@@ -158,6 +158,11 @@ void Display_main_screen_empty()
 	ILI9341_Draw_String(8, 173, WHITE, DARKGREY, "                ", 2);
 }
 
+void Display_main_screen_alarm()
+{
+	ILI9341_Draw_String(150, 48, WHITE, ORANGE, "ALARM!!!", 2);
+}
+
 
 void Display_stations_list_background()
 {

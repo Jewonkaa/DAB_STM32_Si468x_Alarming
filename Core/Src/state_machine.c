@@ -13,10 +13,10 @@
 #include "touch.h"
 #include "alarming.h"
 
-uint8_t system_state = main_screen;
-uint8_t playing_state = playing;
+system_state_t system_state = main_screen;
+playing_state_t playing_state = playing;
 
-uint8_t state_change_done = 0;
+state_change_flag_t state_change_flag = state_change_started_not_completed;
 
 int srv_list_start_index = 0;
 
@@ -40,7 +40,7 @@ alarming_status_t alarming_status_sm; //alarming status to be used by state mach
 
 void state_machine()
 {
-	if(state_change_done)
+	if(state_change_flag == state_change_completed)
 	{
 		touch_coordinates = Touch_read();
 	}
@@ -59,12 +59,9 @@ void state_machine()
 	switch(alarming_status_sm)
 	{
 	case alarming_mode_1:
-		if(!strcmp(dls_label_to_display, "ALARM!"))
+		if(!strcmp(dls_label_to_display, "ALARM!")) //strcmp returns 0 if both char chains are the same
 		{
-			ILI9341_Draw_String(110, 110, WHITE, ORANGE, "ALARM!!!", 2);
-			LEDs_Green_On();
-			LEDs_Blue_On();
-			HAL_Delay(5000);
+			Alarming_Mode_1_Handle();
 		}
 		break;
 
@@ -85,7 +82,7 @@ void state_machine()
 	{
 	case main_screen:
 
-		if(!state_change_done)
+		if(state_change_flag == state_change_started_not_completed)
 		{
 			if(!dab_management_to_display.total_services)
 			{
@@ -111,7 +108,7 @@ void state_machine()
 
 			Display_main_screen_background();
 			Display_main_screen_data(services_list_to_display, ensembles_list_to_display, dab_management_to_display, dab_audio_info_to_display);
-			state_change_done = 1;
+			state_change_flag = state_change_completed;
 		}
 
 		else
@@ -140,40 +137,40 @@ void state_machine()
 		//left button handling (alarming)
 		if(touch_coordinates.x >  5 && touch_coordinates.x < 157 && touch_coordinates.y > 195 && touch_coordinates.y < 235)
 		{
-			state_change_done = 0;
+			state_change_flag = state_change_started_not_completed;
 			system_state = alarming;
 		}
 
 		//right button handling (service list)
 		if(touch_coordinates.x >  163 && touch_coordinates.x < 315 && touch_coordinates.y > 195 && touch_coordinates.y < 235)
 		{
-			state_change_done = 0;
+			state_change_flag = state_change_started_not_completed;
 			system_state = services_list_screen;
 		}
 
 		break;
 
 	case services_list_screen:
-		if(!state_change_done)
+		if(state_change_flag == state_change_started_not_completed)
 		{
 			services_list_to_display = get_dab_service_list();
 //			srv_list_start_index = 0;
 			Display_stations_list_background();
 			Display_stations_list_data(srv_list_start_index, dab_management_to_display, services_list_to_display);
-			state_change_done = 1;
+			state_change_flag = state_change_completed;
 		}
 
 		//left button handling (main)
 		if(touch_coordinates.x > 5 && touch_coordinates.x < 157 && touch_coordinates.y > 195 && touch_coordinates.y < 235)
 		{
-			state_change_done = 0;
+			state_change_flag = state_change_started_not_completed;
 			system_state = main_screen;
 		}
 
 		//right button handling (signal info)
 		if(touch_coordinates.x > 163 && touch_coordinates.x < 315 && touch_coordinates.y > 195 && touch_coordinates.y < 235)
 		{
-			state_change_done = 0;
+			state_change_flag = state_change_started_not_completed;
 			system_state = signal_info;
 		}
 
@@ -210,7 +207,7 @@ void state_machine()
 		{
 			if(dab_management_to_display.total_services)
 			{
-				state_change_done = 0;
+				state_change_flag = state_change_started_not_completed;
 				play_station(srv_list_start_index);
 				playing_state = playing;
 				system_state = main_screen;
@@ -222,7 +219,7 @@ void state_machine()
 		{
 			if(dab_management_to_display.total_services)
 			{
-				state_change_done = 0;
+				state_change_flag = state_change_started_not_completed;
 
 				if(srv_list_start_index + 1 >= dab_management_to_display.total_services)
 				{
@@ -243,7 +240,7 @@ void state_machine()
 		{
 			if(dab_management_to_display.total_services)
 			{
-				state_change_done = 0;
+				state_change_flag = state_change_started_not_completed;
 
 				if(srv_list_start_index + 2 >= dab_management_to_display.total_services)
 				{
@@ -264,7 +261,7 @@ void state_machine()
 		{
 			if(dab_management_to_display.total_services)
 			{
-				state_change_done = 0;
+				state_change_flag = state_change_started_not_completed;
 
 				if(srv_list_start_index + 3 >= dab_management_to_display.total_services)
 				{
@@ -285,7 +282,7 @@ void state_machine()
 		{
 			if(dab_management_to_display.total_services)
 			{
-				state_change_done = 0;
+				state_change_flag = state_change_started_not_completed;
 
 				if(srv_list_start_index + 4 >= dab_management_to_display.total_services)
 				{
@@ -304,10 +301,10 @@ void state_machine()
 		break;
 
 	case signal_info:
-		if(!state_change_done)
+		if(state_change_flag == state_change_started_not_completed)
 		{
 			Display_dab_digrad_status_background();
-			state_change_done = 1;
+			state_change_flag = state_change_completed;
 		}
 		dab_digrad_status_to_display = Si468x_dab_digrad_status();
 		Display_dab_digrad_status_data(dab_digrad_status_to_display);
@@ -315,24 +312,24 @@ void state_machine()
 		//left button handling (services list)
 		if(touch_coordinates.x >  5 && touch_coordinates.x < 157 && touch_coordinates.y > 195 && touch_coordinates.y < 235)
 		{
-			state_change_done = 0;
+			state_change_flag = state_change_started_not_completed;
 			system_state = services_list_screen;
 		}
 
 		//right button handling (settings)
 		if(touch_coordinates.x >  163 && touch_coordinates.x < 315 && touch_coordinates.y > 195 && touch_coordinates.y < 235)
 		{
-			state_change_done = 0;
+			state_change_flag = state_change_started_not_completed;
 			system_state = settings;
 		}
 		break;
 
 	case scanning:
-		if(!state_change_done)
+		if(state_change_flag == state_change_started_not_completed)
 		{
 			playing_state = not_playing;
 			Display_scanning_screen_background();
-			state_change_done = 1;
+			state_change_flag = state_change_completed;
 			scan_complete_flag = Si468x_dab_full_scan();
 			if(scan_complete_flag)
 			{
@@ -349,18 +346,18 @@ void state_machine()
 		if(touch_coordinates.x >  5 && touch_coordinates.x < 315 && touch_coordinates.y > 195 && touch_coordinates.y < 235)
 		{
 			scan_cancel_flag = 1;
-			state_change_done = 0;
+			state_change_flag = state_change_started_not_completed;
 			system_state = settings;
 		}
 
 		break;
 
 	case settings:
-		if(!state_change_done)
+		if(state_change_flag == state_change_started_not_completed)
 		{
 			Display_settings_screen_background();
 			scan_cancel_flag = 0;
-			state_change_done = 1;
+			state_change_flag = state_change_completed;
 		}
 
 		Display_settings_screen_data(dab_management_to_display);
@@ -402,7 +399,7 @@ void state_machine()
 		//scanning button handling
 		if(touch_coordinates.x > 5 && touch_coordinates.x < 157 && touch_coordinates.y > 150 && touch_coordinates.y < 190)
 		{
-			state_change_done = 0;
+			state_change_flag = state_change_started_not_completed;
 			system_state = scanning;
 		}
 
@@ -415,14 +412,14 @@ void state_machine()
 		//left button handling (signal info)
 		if(touch_coordinates.x >  5 && touch_coordinates.x < 157 && touch_coordinates.y > 195 && touch_coordinates.y < 235)
 		{
-			state_change_done = 0;
+			state_change_flag = state_change_started_not_completed;
 			system_state = signal_info;
 		}
 
 		//right button handling (alarming)
 		if(touch_coordinates.x >  163 && touch_coordinates.x < 315 && touch_coordinates.y > 195 && touch_coordinates.y < 235)
 		{
-			state_change_done = 0;
+			state_change_flag = state_change_started_not_completed;
 			system_state = alarming;
 		}
 
@@ -430,11 +427,11 @@ void state_machine()
 		break;
 
 	case alarming:
-		if(!state_change_done)
+		if(state_change_flag == state_change_started_not_completed)
 		{
 			Display_alarming_screen_background();
 			//scan_cancel_flag = 0;
-			state_change_done = 1;
+			state_change_flag = state_change_completed;
 		}
 
 		//Display_settings_screen_data(dab_management_to_display);
@@ -466,14 +463,14 @@ void state_machine()
 		//left button handling (settings)
 		if(touch_coordinates.x >  5 && touch_coordinates.x < 157 && touch_coordinates.y > 195 && touch_coordinates.y < 235)
 		{
-			state_change_done = 0;
+			state_change_flag = state_change_started_not_completed;
 			system_state = settings;
 		}
 
 		//right button handling (main screen)
 		if(touch_coordinates.x >  163 && touch_coordinates.x < 315 && touch_coordinates.y > 195 && touch_coordinates.y < 235)
 		{
-			state_change_done = 0;
+			state_change_flag = state_change_started_not_completed;
 			system_state = main_screen;
 		}
 
@@ -490,4 +487,32 @@ uint8_t get_scan_cancel_flag()
 	return scan_cancel_flag;
 }
 
+system_state_t get_system_state()
+{
+	return system_state;
+}
 
+void set_system_state(system_state_t system_state_to_set)
+{
+	system_state = system_state_to_set;
+}
+
+playing_state_t get_playing_state()
+{
+	return playing_state;
+}
+
+void set_playing_state(playing_state_t playing_state_to_set)
+{
+	playing_state = playing_state_to_set;
+}
+
+state_change_flag_t get_state_change_flag()
+{
+	return state_change_flag;
+}
+
+void set_state_change_flag(state_change_flag_t state_change_flag_to_set)
+{
+	state_change_flag = state_change_flag_to_set;
+}

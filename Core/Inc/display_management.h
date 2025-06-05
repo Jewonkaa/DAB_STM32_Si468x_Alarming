@@ -21,6 +21,7 @@ void Display_main_screen_background();
 void Display_main_screen_data(dab_service_t _services_list[], dab_ensemble_t _ensembles_list[], dab_management_t _dab_management, dab_audio_info_t _dab_audio_info);
 void Display_main_screen_dls(uint8_t* _dls_label);
 void Display_main_screen_empty();
+void Display_main_screen_alarm();
 
 void Display_stations_list_background();
 void Display_stations_list_data(int start_station_index, dab_management_t _dab_management, dab_service_t* _dab_service_list);
