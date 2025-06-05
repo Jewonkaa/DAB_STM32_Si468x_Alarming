@@ -163,6 +163,10 @@ void Display_main_screen_alarm()
 	ILI9341_Draw_String(150, 48, WHITE, ORANGE, "ALARM!!!", 2);
 }
 
+void Display_main_screen_debug(char* debug_msg)
+{
+	ILI9341_Draw_String(150, 70, WHITE, ORANGE, debug_msg, 2);
+}
 
 void Display_stations_list_background()
 {

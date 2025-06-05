@@ -36,7 +36,7 @@ uint8_t scan_complete_flag = 0;
 
 uint16_t audio_info_timeout;
 
-alarming_status_t alarming_status_sm; //alarming status to be used by state machine
+//alarming_status_t alarming_status_sm; //alarming status to be used by state machine
 
 void state_machine()
 {
@@ -53,30 +53,9 @@ void state_machine()
 	dab_management_to_display = get_dab_management();
 	dls_label_to_display = get_dls_label();
 	Si468x_dab_get_time();
-	alarming_status_sm = Alarming_Get_Status();
 
 	//manage alarming functionality
-	switch(alarming_status_sm)
-	{
-	case alarming_mode_1:
-		if(!strcmp(dls_label_to_display, "ALARM!")) //strcmp returns 0 if both char chains are the same
-		{
-			Alarming_Mode_1_Handle();
-		}
-		break;
-
-	case alarming_mode_2:
-		break;
-
-	case alarming_mode_3:
-		break;
-
-	case alarming_off:
-		break;
-
-	default:
-		break;
-	}
+	Alarming_Manage();
 
 	switch(system_state)
 	{
@@ -84,6 +63,7 @@ void state_machine()
 
 		if(state_change_flag == state_change_started_not_completed)
 		{
+			dab_management_to_display = get_dab_management();
 			if(!dab_management_to_display.total_services)
 			{
 				playing_state = not_playing;
@@ -116,9 +96,9 @@ void state_machine()
 			if(playing_state == playing)
 			{
 				Si468x_dab_get_digital_service_data();
-				if (alarming_status_sm == alarming_mode_1)
+				if (Alarming_Get_Status() == alarming_mode_1)
 				{
-					if(strcmp(dls_label_to_display, "ALARM!"))
+					if(strcmp(dls_label_to_display, DLS_ALARM_START_STRING))
 					{
 						Display_main_screen_dls(dls_label_to_display);
 					}

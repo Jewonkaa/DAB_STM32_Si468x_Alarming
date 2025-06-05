@@ -1,8 +1,8 @@
-../Core/Src/state_machine.c:41:6:state_machine	145
-../Core/Src/state_machine.c:485:9:get_scan_cancel_flag	1
-../Core/Src/state_machine.c:490:16:get_system_state	1
-../Core/Src/state_machine.c:495:6:set_system_state	1
-../Core/Src/state_machine.c:500:17:get_playing_state	1
-../Core/Src/state_machine.c:505:6:set_playing_state	1
-../Core/Src/state_machine.c:510:21:get_state_change_flag	1
-../Core/Src/state_machine.c:515:6:set_state_change_flag	1
+../Core/Src/state_machine.c:41:6:state_machine	143
+../Core/Src/state_machine.c:465:9:get_scan_cancel_flag	1
+../Core/Src/state_machine.c:470:16:get_system_state	1
+../Core/Src/state_machine.c:475:6:set_system_state	1
+../Core/Src/state_machine.c:480:17:get_playing_state	1
+../Core/Src/state_machine.c:485:6:set_playing_state	1
+../Core/Src/state_machine.c:490:21:get_state_change_flag	1
+../Core/Src/state_machine.c:495:6:set_state_change_flag	1
