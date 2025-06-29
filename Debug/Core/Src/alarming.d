@@ -32,7 +32,7 @@ Core/Src/alarming.o: ../Core/Src/alarming.c ../Core/Inc/alarming.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
  ../Core/Inc/leds.h ../Core/Inc/state_machine.h ../Core/Inc/Si468x.h \
  ../Core/Inc/display_management.h ../Core/Inc/main.h ../Core/Inc/Si468x.h \
- ../Core/Inc/ILI9341_Driver.h
+ ../Core/Inc/ILI9341_Driver.h ../Core/Inc/debug_uart.h
 ../Core/Inc/alarming.h:
 ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h:
 ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h:
@@ -72,3 +72,4 @@ Core/Src/alarming.o: ../Core/Src/alarming.c ../Core/Inc/alarming.h \
 ../Core/Inc/main.h:
 ../Core/Inc/Si468x.h:
 ../Core/Inc/ILI9341_Driver.h:
+../Core/Inc/debug_uart.h:

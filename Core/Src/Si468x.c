@@ -30,7 +30,7 @@
 static uint8_t dab_spi_tx_buffer[SPI_TX_BUFFER_SIZE];					//SPI TX Buffer using to send data to Si468x
 static uint8_t dab_spi_rx_buffer[SPI_RX_BUFFER_SIZE];					//SPI RX Buffer using to read data from Si468x
 
-static char itoa_buffer[64];											//buffer using to send debug informations by UART, it is necessary for itoa function
+static char itoa_buffer[80];											//buffer using to send debug informations by UART, it is necessary for itoa function
 
 static RETURN_CODE status = 0;											//return status during executing some commands on Si468x
 
@@ -40,6 +40,8 @@ static dab_digrad_status_t dab_digrad_status;							//struct that contains some 
 
 static rd_reply_t rd_reply;												//struct that contains Si468x flags obtained during RD REPLY Command
 static dab_events_t dab_events;											//struct that contains info about DAB flags obtained during DAB_GET_EVENT_STATUS command
+static dab_announcement_info_t dab_announcement_info;					//struct that contains DAB announcement info
+static dab_announcement_support_info_t dab_announcement_support_info;	//struct that contains DAB announcement support info
 static time_t time;														//struct that contains data & time obtained from DAB+
 static dab_audio_info_t dab_audio_info;									//struct that contains DAB+ audio info
 static dab_service_data_reply_header_t dab_service_data_reply_header;	//struct that contains data in dab service data reply header
@@ -554,7 +556,7 @@ dab_digrad_status_t Si468x_dab_digrad_status()
 	status = Si468x_read_reply(40, dab_spi_rx_buffer);
 	if(rd_reply.stc_int)
 	{
-		memcpy((uint8_t*)&dab_digrad_status, (uint8_t*)&dab_spi_rx_buffer[4], sizeof(dab_digrad_status));	//
+		memcpy((uint8_t*)&dab_digrad_status, (uint8_t*)&dab_spi_rx_buffer[4], sizeof(dab_digrad_status_t));	//
 		if(dab_digrad_status.snr > 20)
 		{
 			dab_digrad_status.snr = 0; //snr powyzej 20 nie wystapi, a skrajnie duza wartosc podczas skanowania jest przeklamana
@@ -970,7 +972,7 @@ dab_audio_info_t Si468x_dab_get_audio_info()
 	HAL_Delay(1);
 	status = Si468x_read_reply(20, dab_spi_rx_buffer);
 
-	memcpy((uint8_t*)&dab_audio_info, (uint8_t*)&dab_spi_rx_buffer[4], sizeof(dab_audio_info));
+	memcpy((uint8_t*)&dab_audio_info, (uint8_t*)&dab_spi_rx_buffer[4], sizeof(dab_audio_info_t));
 
 	send_debug_msg("Bitrate: ", CRLF_NO_SEND);
 	send_debug_msg(itoa(dab_audio_info.audio_bit_rate, itoa_buffer, 10), CRLF_SEND);
@@ -993,9 +995,9 @@ dab_audio_info_t Si468x_dab_get_audio_info()
 	return dab_audio_info;
 }
 
-void Si468x_dab_get_event_status()
+dab_events_t Si468x_dab_get_event_status()
 {
-	send_debug_msg("-----------Getting DAB Event Status from Si468x-------------", CRLF_SEND);
+	//send_debug_msg("----------------Getting DAB Event Status from Si468x------------------", CRLF_SEND);
 	dab_spi_tx_buffer[0] = SI468X_CMD_DAB_GET_EVENT_STATUS;
 	dab_spi_tx_buffer[1] = 0x03;	//+2 = Clears the AUDIO_STATUS error indicators BLK_ERROR and BLK_LOSS of this command, +1 = Clears all pending DAB event interrupt bits
 
@@ -1003,7 +1005,205 @@ void Si468x_dab_get_event_status()
 	HAL_Delay(1);
 	status = Si468x_read_reply(9, dab_spi_rx_buffer);
 
-	memcpy((uint8_t*)&dab_events, (uint8_t*)&dab_spi_rx_buffer[4], sizeof(rd_reply_t));
+	memcpy((uint8_t*)&dab_events, (uint8_t*)&dab_spi_rx_buffer[4], sizeof(dab_events_t));
+
+	/*
+	///EVENT INT /////////////////////////////////////////////////////////////
+	send_debug_msg("----------------EVENT_INT------------------", CRLF_SEND);
+
+	send_debug_msg("EVENT_INT->RECFGINT (reconfiguration) (0=NONE, 1=INT): ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_events.recfg_int, itoa_buffer, 10), CRLF_SEND);
+
+	send_debug_msg("EVENT_INT->RECFGWRINT (reconfig warning) (0=NONE, 1=INT): ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_events.recfg_wrn_int, itoa_buffer, 10), CRLF_SEND);
+
+	send_debug_msg("EVENT_INT->AUDIOINT (change in the audio playback) (0=NONE, 1=INT): ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_events.audio_int, itoa_buffer, 10), CRLF_SEND);
+
+	send_debug_msg("EVENT_INT->ANNOINT (Announcement information interrupt) (0=NONE, 1=INT): ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_events.anno_int, itoa_buffer, 10), CRLF_SEND);
+
+	send_debug_msg("EVENT_INT->OESERVINT (Other Ensemble Services interrupt) (0=NONE, 1=INT): ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_events.oe_serv_int, itoa_buffer, 10), CRLF_SEND);
+
+	send_debug_msg("EVENT_INT->SERVLINKINT (Service linking information interrupt) (0=NONE, 1=INT): ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_events.serv_link_int, itoa_buffer, 10), CRLF_SEND);
+
+	send_debug_msg("EVENT_INT->FREQINFOINT (New Frequency Information interrupt) (0=NONE, 1=INT): ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_events.freq_info_int, itoa_buffer, 10), CRLF_SEND);
+
+	send_debug_msg("EVENT_INT->SRVLISTINT (New service list interrupt) (0=NONE, 1=INT): ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_events.srv_list_int, itoa_buffer, 10), CRLF_SEND);
+
+	//////////////////////////////////////////////////////////////////////////
+
+	/////////EVENT STATUS/////////////////////////////////////////////////////
+	send_debug_msg("---------------EVENT_STATUS----------------", CRLF_SEND);
+	send_debug_msg("EVENT_STATUS->AUDIO (is rendering audio?) (0=MUTE, 1=PLAYING): ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_events.audio, itoa_buffer, 10), CRLF_SEND);
+
+	send_debug_msg("EVENT_STATUS->ANNO (Announcement available.) (0=INACTIVE, 1=ACTIVE): ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_events.anno, itoa_buffer, 10), CRLF_SEND);
+
+	send_debug_msg("EVENT_STATUS->OESERV (Other Ensemble Services available) (0=NONE, 1=AVAILABLE): ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_events.oe_serv, itoa_buffer, 10), CRLF_SEND);
+
+	send_debug_msg("EVENT_STATUS->SERVLINK (Service linking information available) (0=NONE, 1=AVAILABLE): ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_events.serv_link, itoa_buffer, 10), CRLF_SEND);
+
+	send_debug_msg("EVENT_STATUS->FREQINFO (New Frequency Information available) (0=NONE, 1=AVAILABLE): ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_events.freq_info, itoa_buffer, 10), CRLF_SEND);
+
+	send_debug_msg("EVENT_STATUS->SRVLIST (New service list available) (0=NONE, 1=AVAILABLE): ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_events.srv_list, itoa_buffer, 10), CRLF_SEND);
+
+	//////////////////////////////////////////////////////////////////////////
+	send_debug_msg("---------------SRV_LIST_VER---------------", CRLF_SEND);
+	send_debug_msg("SRVLISTVER (SRV List Version incremented after each update): ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_events.srv_list_ver, itoa_buffer, 10), CRLF_SEND);
+
+	/////////AUDIO STATUS/////////////////////////////////////////////////////
+	send_debug_msg("---------------AUDIO_STATUS---------------", CRLF_SEND);
+	send_debug_msg("AUDIO_STATUS->MUTE_ENG (MUTE by host) (0=UNMUTE, 1=MUTE): ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_events.mute_eng, itoa_buffer, 10), CRLF_SEND);
+
+	send_debug_msg("AUDIO_STATUS->SM_ENG (SOFTMUTE) (0=UNMUTE, 1=MUTE): ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_events.sm_eng, itoa_buffer, 10), CRLF_SEND);
+
+	send_debug_msg("AUDIO_STATUS->BLK_ERROR (Error in encoded audio blocks) (0=NOERROR, 1=ERROR): ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_events.blk_error, itoa_buffer, 10), CRLF_SEND);
+
+	send_debug_msg("AUDIO_STATUS->BLK_LOSS (detected an audio block loss event) (0=NOLOSS, 1=LOSS): ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_events.blk_loss, itoa_buffer, 10), CRLF_SEND);
+
+	send_debug_msg("----------------------------------------------------------------------------", CRLF_SEND);
+	*/
+	return dab_events;
+}
+
+dab_announcement_info_t Si468x_dab_get_announcement_info()
+{
+	send_debug_msg("-----------Getting DAB Announcement Info from Si468x-------------", CRLF_SEND);
+	dab_spi_tx_buffer[0] = SI468X_CMD_DAB_GET_ANNOUNCEMENT_INFO;
+	dab_spi_tx_buffer[1] = 0x00;	//padding - always 0
+
+	status = Si468x_write_command(2, dab_spi_tx_buffer);
+	HAL_Delay(1);
+	status = Si468x_read_reply(16, dab_spi_rx_buffer);
+
+	memcpy((uint8_t*)&dab_announcement_info, (uint8_t*)&dab_spi_rx_buffer[4], sizeof(dab_announcement_info_t));
+
+	send_debug_msg("Anno Queue Overflow (0=FALSE, 1=TRUE): ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_announcement_info.anno_q_ovfl, itoa_buffer, 10), CRLF_SEND);
+
+	send_debug_msg("Anno Queue Size (0...10): ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_announcement_info.anno_q_size, itoa_buffer, 10), CRLF_SEND);
+
+	send_debug_msg("Anno Cluster ID (0...255): ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_announcement_info.cluster_id, itoa_buffer, 10), CRLF_SEND);
+
+	send_debug_msg("Anno Flags: NEW_FLAG (0=REPEAT, 1=NEW): ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_announcement_info.new_flag, itoa_buffer, 10), CRLF_SEND);
+
+	send_debug_msg("Anno Flags: ANNO_STAT (0=OFF, 1=ON): ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_announcement_info.anno_stat, itoa_buffer, 10), CRLF_SEND);
+
+	send_debug_msg("Anno Flags: REGION_FLAG (0=NOT AVAILABLE, 1=AVAILABLE): ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_announcement_info.region_flag, itoa_buffer, 10), CRLF_SEND);
+
+	send_debug_msg("Anno Flags: SOURCE (0=CURRENT ENS, 1=OTHER ENS, 2=FM): ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_announcement_info.src, itoa_buffer, 10), CRLF_SEND);
+
+	send_debug_msg("Anno Types Flags. Each bit means different anno type: ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_announcement_info.asw, itoa_buffer, 10), CRLF_SEND);
+
+	send_debug_msg("Announcement Flags: NEW_FLAG (0=REPEAT, 1=NEW): ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_announcement_info.new_flag, itoa_buffer, 10), CRLF_SEND);
+
+	send_debug_msg("Anno ID1: ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_announcement_info.id_1, itoa_buffer, 10), CRLF_SEND);
+
+	send_debug_msg("Anno ID2: ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_announcement_info.id_2, itoa_buffer, 10), CRLF_SEND);
+
+	send_debug_msg("Region ID1: ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_announcement_info.region_id_1, itoa_buffer, 10), CRLF_SEND);
+
+	send_debug_msg("Region ID2: ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_announcement_info.region_id_2, itoa_buffer, 10), CRLF_SEND);
+
+	send_debug_msg("------------------------------------------------------------------------", CRLF_SEND);
+	return dab_announcement_info;
+}
+
+dab_announcement_support_info_t Si468x_dab_get_announcement_support_info(uint32_t _service_id)
+{
+	send_debug_msg("-----------Getting DAB Announcement Support Info from Si468x-------------", CRLF_SEND);
+	dab_spi_tx_buffer[0] = SI468X_CMD_DAB_GET_ANNOUNCEMENT_SUPPORT_INFO;
+	dab_spi_tx_buffer[1] = 0x00;	//Announcement source. 0 = current ensemble (FIG 0/18), 1 = other ensemble (FIG 0/25), 2 = FM (FIG 0/27)
+	dab_spi_tx_buffer[2] = 0x00;	//padding - always 0
+	dab_spi_tx_buffer[3] = 0x00;	//padding - always 0
+	dab_spi_tx_buffer[4]  = _service_id & 0xFF;					//Service ID [7:0] The service ID of which the announcement support information will be returned.
+	dab_spi_tx_buffer[5]  = _service_id >> 8;					//Service ID [15:8] The service ID of which the announcement support information will be returned.
+	dab_spi_tx_buffer[6]  = _service_id >> 16;					//Service ID [23:16] The service ID of which the announcement support information will be returned.
+	dab_spi_tx_buffer[7]  = _service_id >> 24;					//Service ID [31:24] The service ID of which the announcement support information will be returned.
+
+
+	status = Si468x_write_command(8, dab_spi_tx_buffer);
+	HAL_Delay(1);
+	status = Si468x_read_reply(5, dab_spi_rx_buffer);
+
+	if(dab_spi_rx_buffer[4] <= 23) //when num_ids valid (23 maximum)
+	{
+		status = Si468x_read_reply(8 + 2 * dab_spi_rx_buffer[4], dab_spi_rx_buffer); //first 8 bytes + 2 bytes for each ID
+
+		memcpy((uint8_t*)&dab_announcement_support_info, (uint8_t*)&dab_spi_rx_buffer[4], 4 + 2 * dab_spi_rx_buffer[4]); //copy only valid data
+	}
+
+	else	//when num_ids not valid
+	{
+		memcpy((uint8_t*)&dab_announcement_support_info, (uint8_t*)&dab_spi_rx_buffer[4], 4); //only num_ids, padding and 16-bit ASU
+	}
+
+	send_debug_msg("Number of IDs: ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_announcement_support_info.num_ids, itoa_buffer, 10), CRLF_SEND);
+
+	send_debug_msg("Anno Types Support Flags. 1 = supported, 0 = not supported: ", CRLF_SEND);
+	send_debug_msg("Alarm:      ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_announcement_support_info.anno_support.alarm, itoa_buffer, 10), CRLF_SEND);
+	send_debug_msg("Traffic:    ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_announcement_support_info.anno_support.traffic, itoa_buffer, 10), CRLF_SEND);
+	send_debug_msg("Transport:  ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_announcement_support_info.anno_support.transport, itoa_buffer, 10), CRLF_SEND);
+	send_debug_msg("Warning:    ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_announcement_support_info.anno_support.warning, itoa_buffer, 10), CRLF_SEND);
+	send_debug_msg("News:       ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_announcement_support_info.anno_support.news, itoa_buffer, 10), CRLF_SEND);
+	send_debug_msg("Weather:    ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_announcement_support_info.anno_support.weather, itoa_buffer, 10), CRLF_SEND);
+	send_debug_msg("Event:      ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_announcement_support_info.anno_support.event, itoa_buffer, 10), CRLF_SEND);
+	send_debug_msg("Special:    ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_announcement_support_info.anno_support.special, itoa_buffer, 10), CRLF_SEND);
+	send_debug_msg("Radio_Info: ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_announcement_support_info.anno_support.rad_info, itoa_buffer, 10), CRLF_SEND);
+	send_debug_msg("Sport:      ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_announcement_support_info.anno_support.sport, itoa_buffer, 10), CRLF_SEND);
+	send_debug_msg("Finance:    ", CRLF_NO_SEND);
+	send_debug_msg(itoa(dab_announcement_support_info.anno_support.finance, itoa_buffer, 10), CRLF_SEND);
+
+	uint8_t _num_ids = dab_announcement_support_info.num_ids;
+
+	if(_num_ids > 23) _num_ids = 0;
+
+	for(uint8_t i = 0; i < dab_announcement_support_info.num_ids; i++)
+	{
+		send_debug_msg("ID ", CRLF_NO_SEND);
+		send_debug_msg(itoa(i, itoa_buffer, 10), CRLF_NO_SEND);
+		send_debug_msg(". When SRC is current ensemble, this is the cluster id. : ", CRLF_NO_SEND);
+		send_debug_msg(itoa(dab_announcement_support_info.id[i], itoa_buffer, 10), CRLF_SEND);
+	}
+	return dab_announcement_support_info;
 }
 
 void Si468x_dab_get_component_info(uint32_t service_id, uint8_t component_id)
@@ -1069,7 +1269,7 @@ void Si468x_dab_get_digital_service_data()
 
 		//first read only header to obtain payload data size
 		status = Si468x_read_reply(30, dab_spi_rx_buffer);
-		memcpy((uint8_t*)&dab_service_data_reply_header, (uint8_t*)&dab_spi_rx_buffer[4], sizeof(dab_service_data_reply_header));
+		memcpy((uint8_t*)&dab_service_data_reply_header, (uint8_t*)&dab_spi_rx_buffer[4], sizeof(dab_service_data_reply_header_t));
 
 
 //		if(dab_service_data_reply_header.buff_count)
@@ -1318,7 +1518,7 @@ void Si468x_dab_get_time()
 		HAL_Delay(1);
 		status = Si468x_read_reply(11, dab_spi_rx_buffer);
 
-		memcpy((uint8_t*)&time, (uint8_t*)&dab_spi_rx_buffer[4], sizeof(time));
+		memcpy((uint8_t*)&time, (uint8_t*)&dab_spi_rx_buffer[4], sizeof(time_t));
 
 		Display_time(time);
 
@@ -1377,6 +1577,9 @@ void play_station(uint8_t station_id)
 	send_debug_msg(itoa(dab_management.actual_station + 1, itoa_buffer, 10), CRLF_SEND);
 	send_debug_msg("Name: ", CRLF_NO_SEND);
 	send_debug_msg(services_list[dab_management.actual_station].name, CRLF_SEND);
+	send_debug_msg("Service ID: ", CRLF_NO_SEND);
+	send_debug_msg(itoa(services_list[dab_management.actual_station].service_id, itoa_buffer, 10), CRLF_SEND);
+
 	Si468x_dab_tune_freq(services_list[dab_management.actual_station].freq_id, USE_ANT_CAP); //CH_11B - PR Kraków, CH_9C - DABCOM Tarnów, CH_10D - PR Kielce,
 	Si468x_dab_get_component_info(services_list[dab_management.actual_station].service_id, services_list[dab_management.actual_station].components[0].subchannel_id);
 	Si468x_dab_start_digital_service(services_list[dab_management.actual_station].service_id, services_list[dab_management.actual_station].components[0].subchannel_id);

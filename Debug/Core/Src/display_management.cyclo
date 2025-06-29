@@ -14,6 +14,6 @@
 ../Core/Src/display_management.c:331:6:Display_dab_digrad_status_background	1
 ../Core/Src/display_management.c:391:6:Display_dab_digrad_status_data	45
 ../Core/Src/display_management.c:506:6:Display_settings_screen_background	1
-../Core/Src/display_management.c:544:6:Display_settings_screen_data	1
-../Core/Src/display_management.c:554:6:Display_alarming_screen_background	1
-../Core/Src/display_management.c:590:6:Display_time	5
+../Core/Src/display_management.c:547:6:Display_settings_screen_data	1
+../Core/Src/display_management.c:557:6:Display_alarming_screen_background	1
+../Core/Src/display_management.c:594:6:Display_time	5

@@ -34,7 +34,9 @@ void Alarming_Off();
 void Alarming_Mode_1_Start();
 void Alarming_Mode_1_Stop();
 
-void Alarming_Mode_2_Handle();
+void Alarming_Mode_2_Start();
+void Alarming_Mode_2_Stop();
+
 void Alarming_Mode_3_Handle();
 
 alarming_status_t Alarming_Get_Status();

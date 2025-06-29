@@ -364,16 +364,16 @@ void state_machine()
 			Si468x_set_audio_volume(dab_management_to_display.audio_volume);
 		}
 
-		//backlight+ button handling
+		//backlight+ button handling -- temporary as DAB Get event status
 		if(touch_coordinates.x > 163 && touch_coordinates.x < 315 && touch_coordinates.y > 105 && touch_coordinates.y < 145)
 		{
-
+			Si468x_dab_get_event_status();
 		}
 
-		//backlight- button handling
+		//backlight- button handling -- temporary as DAB get announcement info
 		if(touch_coordinates.x > 5 && touch_coordinates.x < 157 && touch_coordinates.y > 105 && touch_coordinates.y < 145)
 		{
-
+			Si468x_dab_get_announcement_info();
 		}
 
 		//scanning button handling
@@ -383,10 +383,11 @@ void state_machine()
 			system_state = scanning;
 		}
 
-		//touch calibration button handling
+		//touch calibration button handling -- temporary as DAB get announcement support info
 		if(touch_coordinates.x > 163 && touch_coordinates.x < 315 && touch_coordinates.y > 150 && touch_coordinates.y < 190)
 		{
 
+			Si468x_dab_get_announcement_support_info(services_list_to_display[dab_management_to_display.actual_station].service_id);
 		}
 
 		//left button handling (signal info)
