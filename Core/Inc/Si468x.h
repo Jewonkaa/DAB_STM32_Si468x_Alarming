@@ -225,6 +225,92 @@ typedef struct{
 	uint8_t 				: 4;	//ignore
 }dab_events_t;
 
+//Struct that contains info about DAB announcement info
+typedef struct{
+	//reply byte 4 - QUEUE_STAT
+	uint8_t anno_q_ovfl		: 1;	//Announcement queue overflow flag. 0 - Queue has not overflowed. 1 - Queue has overflowed. Some announcement event has been discarded and cannot be recovered.
+	uint8_t 				: 7;	//ignore
+	//reply byte 5 - QUEUE_SIZE
+	uint8_t anno_q_size		: 5;	//Indicates number of events that have been queued up in the announcement queue. The announcement queue can hold up to 10 announcement events.
+	uint8_t 				: 3;	//ignore
+	//reply byte 6 - CLUSTER_ID
+	uint8_t cluster_id		: 8;	//Cluster ID of the announcement. This field identify the announcement cluster for which the announcement is intended. Please refer to clause 8.1.6.2, 8.1.10.5.2 and 8.1.11.2.2 of ETSI EN 300 401 V1.4.1
+	//reply byte 7 - FLAG
+	uint8_t src				: 2;	//Announcement source. 0x0 Current ensemble. 0x1 Other ensemble. 0x2 FM
+	uint8_t region_flag		: 1;	//Region flag. OFF	0x0	Region id is not available	ON	0x1	Region id is available
+	uint8_t anno_stat		: 1;	//announcement status. OFF	0x0	Indicates that an announcement has stopped.	ON	0x1	Indicates that an announcement has started.
+	uint8_t new_flag		: 1;	//New flag. This field indicates whether the announcement is newly introduced. Please refer to clause 8.1.6.2, 8.1.10.5.2 and 8.1.11.2.2 of ETSI EN 300 401 V1.4.1. REPEAT	0x0	repeat announcement. NEW	0x1	newly introduced announcement.
+	uint8_t 				: 3;	//ignore
+	//reply byte 8 & 9 - ASW
+	uint16_t asw			: 16;	//This field specifies the announcement types which apply to the announcement. The individual bits indicate whether or not a particular announcement type is signalled. 0 indicates that announcement type is invalid. 1 indicates that announcement type is valid. The interpretation of the flags shall be as defined in TS 101 756, table 14.
+	//reply byte 10 & 11 - ID1
+	uint16_t id_1			: 16;	//Announcement ID1 indicates the ID information where the host can retrieve the announcement. If announcement source (SRC) is current ensemble, this field is the service ID. Note that it is the lower 16 bits of the service ID and it is assumed that the upper 16 bits are 0. Use the component ID in ID2 field to locate the announcement service in current ensemble. If announcement source (SRC) is other ensemble, this field is other ensemble EID. If announcement source (SRC) is FM, this field is FM PI.
+	//reply byte 12 & 13 - ID2
+	uint16_t id_2			: 16;	//Announcement ID2 indicates the ID information where the host can retrieve the announcement. If announcement source (SRC) is current ensemble, this field is component ID. Use the service ID in ID1 field to locate the announcement service in current ensemble. If announcement source is other ensemble, this field is other ensemble cluster ID. If announcement source is FM, this field is 0.
+	//reply byte 14 - REGIONID1
+	uint8_t region_id_1		:8;		//If REGION_FLAG is set, this field shall identify the region in the current ensemble to which the announcement is targeted. It uses the lower part of the Region Identifier. The upper part of the Region Identifier shall be set to 0. See clause 8.1.16 of ETSI EN 300 401 V1.4.1.
+	//reply byte 15 - REGIONID2
+	uint8_t region_id_2		:8;		//If REGION_FLAG is set, this field shall identify the region in the other ensemble to which the announcement is targeted. It uses the lower part of the Region Identifier. The upper part of the Region Identifier shall be set to 0. See clause 8.1.16 of ETSI EN 300 401 V1.4.1. This field is only valid if announcement source (SRC) is other ensemble. Set to 0 when SRC is current ensemble or FM.
+
+}dab_announcement_info_t;
+
+//Struct that contains info about DAB announcement support info
+typedef struct{
+	//reply byte 4 - NUM_IDS
+	uint8_t num_ids			: 8;	//Number of IDs in the ID list.
+	//reply byte 5 - PAD0
+	uint8_t 				: 8;	//ignore
+	//reply byte 6 & 7 - ASU
+	uint16_t anno_support	: 16;	//ASu (Announcement support) flag. This 16-bit field specifies the types of announcements by which the service may be interrupted. The interpretation of this field is defined in TS 101 756, table 14. Host can set property [ref DAB_ANNOUNCEMENT_ENABLE] to select interested announcement types.
+	//reply byte  8 &  9 - ID[0]
+	uint16_t id_0			: 16;	//ID. When SRC is current ensemble, this is the cluster id. When SRC is other ensemble, this is other ensemble EID. When SRC is FM, this is the FM PI.
+	//reply byte 10 & 11 - ID[1]
+	uint16_t id_1			: 16;	//ID. When SRC is current ensemble, this is the cluster id. When SRC is other ensemble, this is other ensemble EID. When SRC is FM, this is the FM PI.
+	//reply byte 12 & 13 - ID[2]
+	uint16_t id_2			: 16;	//ID. When SRC is current ensemble, this is the cluster id. When SRC is other ensemble, this is other ensemble EID. When SRC is FM, this is the FM PI.
+	//reply byte 14 & 15 - ID[3]
+	uint16_t id_3			: 16;	//ID. When SRC is current ensemble, this is the cluster id. When SRC is other ensemble, this is other ensemble EID. When SRC is FM, this is the FM PI.
+	//reply byte 16 & 17 - ID[4]
+	uint16_t id_4			: 16;	//ID. When SRC is current ensemble, this is the cluster id. When SRC is other ensemble, this is other ensemble EID. When SRC is FM, this is the FM PI.
+	//reply byte 18 & 19 - ID[5]
+	uint16_t id_5			: 16;	//ID. When SRC is current ensemble, this is the cluster id. When SRC is other ensemble, this is other ensemble EID. When SRC is FM, this is the FM PI.
+	//reply byte 20 & 21 - ID[6]
+	uint16_t id_6			: 16;	//ID. When SRC is current ensemble, this is the cluster id. When SRC is other ensemble, this is other ensemble EID. When SRC is FM, this is the FM PI.
+	//reply byte 22 & 23 - ID[7]
+	uint16_t id_7			: 16;	//ID. When SRC is current ensemble, this is the cluster id. When SRC is other ensemble, this is other ensemble EID. When SRC is FM, this is the FM PI.
+	//reply byte 24 & 25 - ID[8]
+	uint16_t id_8			: 16;	//ID. When SRC is current ensemble, this is the cluster id. When SRC is other ensemble, this is other ensemble EID. When SRC is FM, this is the FM PI.
+	//reply byte 26 & 27 - ID[9]
+	uint16_t id_9			: 16;	//ID. When SRC is current ensemble, this is the cluster id. When SRC is other ensemble, this is other ensemble EID. When SRC is FM, this is the FM PI.
+	//reply byte 28 & 29 - ID[10]
+	uint16_t id_10			: 16;	//ID. When SRC is current ensemble, this is the cluster id. When SRC is other ensemble, this is other ensemble EID. When SRC is FM, this is the FM PI.
+	//reply byte 30 & 31 - ID[11]
+	uint16_t id_11			: 16;	//ID. When SRC is current ensemble, this is the cluster id. When SRC is other ensemble, this is other ensemble EID. When SRC is FM, this is the FM PI.
+	//reply byte 32 & 33 - ID[12]
+	uint16_t id_12			: 16;	//ID. When SRC is current ensemble, this is the cluster id. When SRC is other ensemble, this is other ensemble EID. When SRC is FM, this is the FM PI.
+	//reply byte 34 & 35 - ID[13]
+	uint16_t id_13			: 16;	//ID. When SRC is current ensemble, this is the cluster id. When SRC is other ensemble, this is other ensemble EID. When SRC is FM, this is the FM PI.
+	//reply byte 36 & 37 - ID[14]
+	uint16_t id_14			: 16;	//ID. When SRC is current ensemble, this is the cluster id. When SRC is other ensemble, this is other ensemble EID. When SRC is FM, this is the FM PI.
+	//reply byte 38 & 39 - ID[15]
+	uint16_t id_15			: 16;	//ID. When SRC is current ensemble, this is the cluster id. When SRC is other ensemble, this is other ensemble EID. When SRC is FM, this is the FM PI.
+	//reply byte 40 & 41 - ID[16]
+	uint16_t id_16			: 16;	//ID. When SRC is current ensemble, this is the cluster id. When SRC is other ensemble, this is other ensemble EID. When SRC is FM, this is the FM PI.
+	//reply byte 42 & 43 - ID[17]
+	uint16_t id_17			: 16;	//ID. When SRC is current ensemble, this is the cluster id. When SRC is other ensemble, this is other ensemble EID. When SRC is FM, this is the FM PI.
+	//reply byte 44 & 45 - ID[18]
+	uint16_t id_18			: 16;	//ID. When SRC is current ensemble, this is the cluster id. When SRC is other ensemble, this is other ensemble EID. When SRC is FM, this is the FM PI.
+	//reply byte 46 & 47 - ID[19]
+	uint16_t id_19			: 16;	//ID. When SRC is current ensemble, this is the cluster id. When SRC is other ensemble, this is other ensemble EID. When SRC is FM, this is the FM PI.
+	//reply byte 48 & 49 - ID[20]
+	uint16_t id_20			: 16;	//ID. When SRC is current ensemble, this is the cluster id. When SRC is other ensemble, this is other ensemble EID. When SRC is FM, this is the FM PI.
+	//reply byte 50 & 51 - ID[21]
+	uint16_t id_21			: 16;	//ID. When SRC is current ensemble, this is the cluster id. When SRC is other ensemble, this is other ensemble EID. When SRC is FM, this is the FM PI.
+	//reply byte 52 & 53 - ID[22]
+	uint16_t id_22			: 16;	//ID. When SRC is current ensemble, this is the cluster id. When SRC is other ensemble, this is other ensemble EID. When SRC is FM, this is the FM PI.
+
+}dab_announcement_support_info_t;
+
 //Struct that contains info about time which is get by DAB_GET_TIME command
 typedef struct{
 	uint16_t year			: 16;
